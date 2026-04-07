@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apex & Partners</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500;600&family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    :root{
+      --black:#000;--white:#fff;--navy:#0d1c35;
+      --gray:#f5f5f5;--border:#ddd;--muted:#666;--light:#999;
+    }
+    html{scroll-behavior:smooth}
+    body{font-family:'Noto Sans KR',sans-serif;background:#fff;color:#111;overflow-x:hidden}
+
+    /* TOP BAR - 김앤장: 최상단 유틸리티 바 */
+    .top-bar{
+      background:var(--navy);padding:0 2.5rem;height:36px;
+      display:flex;align-items:center;justify-content:flex-end;gap:1.5rem;
+    }
+    .top-bar a{
+      font-size:0.72rem;color:rgba(255,255,255,0.55);text-decoration:none;
+      letter-spacing:0.04em;transition:color 0.2s;
+    }
+    .top-bar a:hover{color:#fff}
+    .top-bar-divider{width:1px;height:10px;background:rgba(255,255,255,0.2)}
+
+    /* MAIN NAV - 김앤장: 흰 배경, 영문 대문자 메뉴, 좌측 로고 */
+    nav{
+      position:sticky;top:0;z-index:100;
+      background:#fff;border-bottom:1px solid var(--border);
+    }
+    .nav-inner{
+      height:68px;display:flex;align-items:center;justify-content:space-between;
+      padding:0 2.5rem;max-width:1200px;margin:0 auto;
+    }
+    .logo{
+      font-family:'Noto Serif KR',serif;
+      font-size:1.15rem;font-weight:600;color:var(--navy);
+      text-decoration:none;letter-spacing:0.02em;
+    }
+    .logo span{color:#b8860b}
+    .nav-menu{display:flex;gap:0;list-style:none;height:68px}
+    .nav-menu>li{position:relative;display:flex;align-items:center}
+    .nav-menu>li>a{
+      font-size:0.78rem;font-weight:500;color:#333;
+      text-decoration:none;letter-spacing:0.08em;text-transform:uppercase;
+      padding:0 1.4rem;height:68px;display:flex;align-items:center;
+      border-bottom:3px solid transparent;transition:color 0.2s,border-color 0.2s;
+      white-space:nowrap;
+    }
+    .nav-menu>li>a:hover{color:var(--navy);border-bottom-color:var(--navy)}
+    .nav-utils{display:flex;align-items:center;gap:1rem}
+    .nav-search{background:none;border:none;cursor:pointer;padding:0.4rem;color:#666;font-size:1.1rem}
+    .nav-lang{font-size:0.75rem;color:#666;text-decoration:none;border:1px solid #ddd;padding:0.3rem 0.6rem;transition:background 0.2s}
+    .nav-lang:hover{background:var(--gray)}
+    .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:4px}
+    .hamburger span{width:22px;height:1.5px;background:#333;display:block}
+    .mobile-menu{display:none;position:fixed;inset:0;z-index:200;background:#fff;flex-direction:column;align-items:center;justify-content:center;gap:2rem}
+    .mobile-menu.open{display:flex}
+    .mobile-menu a{font-size:1.1rem;font-weight:500;letter-spacing:0.1em;text-transform:uppercase;color:#333;text-decoration:none}
+    .mobile-close{position:absolute;top:1.5rem;right:1.5rem;background:none;border:none;font-size:1.8rem;cursor:pointer;color:#999}
+
+    /* HERO - 김앤장: 풀스크린 다크 배경, 중앙 텍스트, 스크롤 인디케이터 */
+    .hero{
+      height:100vh;min-height:600px;
+      background:var(--navy);
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      position:relative;overflow:hidden;text-align:center;padding:2rem;
+    }
+    .hero-overlay{
+      position:absolute;inset:0;
+      background:
+        radial-gradient(ellipse 80% 60% at 50% 40%, rgba(184,134,11,0.06) 0%, transparent 65%),
+        linear-gradient(180deg,rgba(13,28,53,0.5) 0%,rgba(13,28,53,0.95) 100%);
+    }
+    .hero-content{position:relative;z-index:1}
+    .hero-en{
+      font-size:0.72rem;letter-spacing:0.25em;text-transform:uppercase;
+      color:rgba(255,255,255,0.4);margin-bottom:2rem;
+    }
+    .hero h1{
+      font-family:'Noto Serif KR',serif;
+      font-size:clamp(2rem,4vw,3.4rem);font-weight:500;
+      color:#fff;line-height:1.5;letter-spacing:0.02em;
+      margin-bottom:2rem;max-width:700px;
+    }
+    .hero h1 em{color:#c9a84c;font-style:normal}
+    .hero-divider{width:40px;height:1px;background:#c9a84c;margin:0 auto 2rem}
+    .hero p{
+      font-size:1rem;color:rgba(255,255,255,0.55);
+      line-height:1.9;max-width:520px;margin:0 auto;font-weight:300;
+    }
+    .hero-scroll{
+      position:absolute;bottom:2.5rem;left:50%;transform:translateX(-50%);
+      display:flex;flex-direction:column;align-items:center;gap:0.5rem;z-index:1;cursor:pointer;
+    }
+    .hero-scroll span{font-size:0.65rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(255,255,255,0.3)}
+    .scroll-line{width:1px;height:40px;background:linear-gradient(to bottom,rgba(255,255,255,0.3),transparent)}
+
+    /* QUICK LINKS - 김앤장: 서비스 카테고리 아이콘 바 없음, 대신 expertise 바 */
+    .expertise-bar{
+      background:#fff;border-bottom:1px solid var(--border);
+      padding:0;overflow-x:auto;
+    }
+    .expertise-inner{
+      display:flex;max-width:1200px;margin:0 auto;
+    }
+    .expertise-item{
+      flex:1;min-width:140px;padding:1.5rem 1rem;text-align:center;
+      border-right:1px solid var(--border);cursor:default;
+      transition:background 0.2s;text-decoration:none;color:inherit;
+    }
+    .expertise-item:last-child{border-right:none}
+    .expertise-item:hover{background:var(--gray)}
+    .expertise-item-label{font-size:0.78rem;font-weight:500;color:var(--navy);letter-spacing:0.03em}
+
+    /* INSIGHTS - 김앤장: 최신 인사이트/뉴스레터 카드 메인 섹션 */
+    .section{padding:5rem 2.5rem}
+    .section-inner{max-width:1200px;margin:0 auto}
+    .section-gray{background:var(--gray)}
+    .section-head{
+      display:flex;align-items:flex-end;justify-content:space-between;
+      margin-bottom:2.5rem;flex-wrap:wrap;gap:1rem;
+      border-bottom:1px solid var(--border);padding-bottom:1.2rem;
+    }
+    .section-head h2{
+      font-family:'Noto Serif KR',serif;
+      font-size:1.4rem;font-weight:500;color:var(--navy);letter-spacing:0.02em;
+    }
+    .view-more{font-size:0.78rem;color:#555;text-decoration:none;letter-spacing:0.05em;text-transform:uppercase;transition:color 0.2s}
+    .view-more:hover{color:var(--navy)}
+
+    .insights-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:0;border:1px solid var(--border)}
+    .insight-main{
+      padding:2.5rem;border-right:1px solid var(--border);
+      cursor:default;transition:background 0.2s;
+    }
+    .insight-main:hover{background:var(--gray)}
+    .insight-side{display:flex;flex-direction:column}
+    .insight-side-item{
+      padding:1.8rem 1.5rem;border-bottom:1px solid var(--border);
+      border-right:1px solid var(--border);
+      cursor:default;transition:background 0.2s;flex:1;
+    }
+    .insight-side-item:last-child{border-bottom:none}
+    .insight-side-item:hover{background:var(--gray)}
+    .insight-type{
+      font-size:0.68rem;letter-spacing:0.15em;text-transform:uppercase;
+      color:#b8860b;margin-bottom:1rem;font-weight:500;
+    }
+    .insight-main h3{
+      font-family:'Noto Serif KR',serif;
+      font-size:1.2rem;font-weight:500;line-height:1.6;
+      color:var(--navy);margin-bottom:1rem;
+    }
+    .insight-side-item h4{
+      font-family:'Noto Serif KR',serif;
+      font-size:0.95rem;font-weight:500;line-height:1.6;
+      color:var(--navy);margin-bottom:0.8rem;
+    }
+    .insight-excerpt{font-size:0.84rem;color:var(--muted);line-height:1.8;margin-bottom:1.5rem}
+    .insight-date{font-size:0.72rem;color:var(--light);letter-spacing:0.04em}
+
+    /* ABOUT - 김앤장: 좌우 텍스트+이미지, 수상내역 */
+    .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--border)}
+    .about-text{padding:3.5rem;border-right:1px solid var(--border)}
+    .about-text h2{
+      font-family:'Noto Serif KR',serif;
+      font-size:1.5rem;font-weight:500;color:var(--navy);
+      margin-bottom:1.5rem;line-height:1.6;
+    }
+    .about-text p{font-size:0.9rem;color:var(--muted);line-height:1.9;margin-bottom:1.5rem}
+    .about-awards{padding:3.5rem;background:var(--navy)}
+    .awards-title{font-size:0.72rem;letter-spacing:0.18em;text-transform:uppercase;color:#c9a84c;margin-bottom:2rem}
+    .award-item{
+      padding:1.2rem 0;border-bottom:1px solid rgba(255,255,255,0.1);
+      display:flex;align-items:flex-start;gap:1rem;
+    }
+    .award-item:last-child{border-bottom:none}
+    .award-year{font-size:0.72rem;color:rgba(255,255,255,0.35);min-width:32px;margin-top:0.2rem;letter-spacing:0.05em}
+    .award-name{font-size:0.88rem;color:rgba(255,255,255,0.8);line-height:1.6}
+    .award-detail{font-size:0.78rem;color:rgba(255,255,255,0.4);margin-top:0.2rem}
+
+    /* PROFESSIONALS - 김앤장: 전문가/팀 섹션 */
+    .professionals-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid var(--border)}
+    .professional-card{
+      padding:2rem 1.5rem;border-right:1px solid var(--border);
+      cursor:default;transition:background 0.2s;
+    }
+    .professional-card:last-child{border-right:none}
+    .professional-card:hover{background:var(--gray)}
+    .professional-avatar{
+      width:56px;height:56px;border-radius:50%;background:var(--navy);
+      display:flex;align-items:center;justify-content:center;
+      font-family:'Noto Serif KR',serif;font-size:1.1rem;color:#c9a84c;
+      margin-bottom:1rem;
+    }
+    .professional-name{font-size:0.95rem;font-weight:500;color:var(--navy);margin-bottom:0.3rem}
+    .professional-role{font-size:0.78rem;color:var(--muted);margin-bottom:0.8rem}
+    .professional-area{font-size:0.78rem;color:var(--light);line-height:1.6}
+
+    /* FOOTER - 김앤장: 4컬럼 링크 + 주소 + 저작권 */
+    footer{background:var(--navy);padding:3.5rem 2.5rem 2rem}
+    .footer-inner{max-width:1200px;margin:0 auto}
+    .footer-grid{
+      display:grid;grid-template-columns:repeat(4,1fr);gap:2.5rem;
+      margin-bottom:3rem;padding-bottom:2.5rem;
+      border-bottom:1px solid rgba(255,255,255,0.1);
+    }
+    .footer-col h4{
+      font-size:0.72rem;letter-spacing:0.15em;text-transform:uppercase;
+      color:rgba(255,255,255,0.4);margin-bottom:1.2rem;font-weight:400;
+    }
+    .footer-col ul{list-style:none;display:flex;flex-direction:column;gap:0.7rem}
+    .footer-col ul a{font-size:0.82rem;color:rgba(255,255,255,0.6);text-decoration:none;transition:color 0.2s}
+    .footer-col ul a:hover{color:#fff}
+    .footer-bottom{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:1.5rem}
+    .footer-logo-area .logo{color:rgba(255,255,255,0.5)}
+    .footer-logo-area .logo span{color:#c9a84c}
+    .footer-address{font-size:0.75rem;color:rgba(255,255,255,0.25);line-height:1.8;margin-top:0.8rem}
+    .footer-legal{display:flex;flex-direction:column;align-items:flex-end;gap:0.5rem}
+    .footer-legal-links{display:flex;gap:1.2rem}
+    .footer-legal-links a{font-size:0.72rem;color:rgba(255,255,255,0.3);text-decoration:none;transition:color 0.2s}
+    .footer-legal-links a:hover{color:rgba(255,255,255,0.6)}
+    .footer-copy{font-size:0.72rem;color:rgba(255,255,255,0.2);margin-top:0.3rem}
+
+    @media(max-width:900px){
+      .top-bar{display:none}
+      .nav-inner{padding:0 1.25rem}
+      .nav-menu,.nav-utils{display:none}
+      .hamburger{display:flex}
+      .hero h1{font-size:1.8rem}
+      .expertise-inner{display:grid;grid-template-columns:repeat(2,1fr)}
+      .expertise-item{border-right:1px solid var(--border)}
+      .section{padding:3rem 1.25rem}
+      .insights-grid{grid-template-columns:1fr}
+      .insight-main,.insight-side-item{border-right:none}
+      .about-grid{grid-template-columns:1fr}
+      .about-text{border-right:none;border-bottom:1px solid var(--border)}
+      .professionals-grid{grid-template-columns:repeat(2,1fr)}
+      .professional-card:nth-child(2n){border-right:none}
+      .professional-card:nth-child(n+3){border-top:1px solid var(--border)}
+      footer{padding:2.5rem 1.25rem 1.5rem}
+      .footer-grid{grid-template-columns:repeat(2,1fr);gap:2rem}
+      .footer-bottom{flex-direction:column}
+      .footer-legal{align-items:flex-start}
+    }
+  </style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="top-bar">
+  <a href="#">오시는 길</a>
+  <div class="top-bar-divider"></div>
+  <a href="#">연락처</a>
+  <div class="top-bar-divider"></div>
+  <a href="#">KO</a>
+  <a href="#">EN</a>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="logo">Apex <span>&</span> Partners</a>
+    <ul class="nav-menu">
+      <li><a href="#expertise">EXPERTISE</a></li>
+      <li><a href="#professionals">PROFESSIONALS</a></li>
+      <li><a href="#insights">INSIGHTS</a></li>
+      <li><a href="#about">ABOUT</a></li>
+    </ul>
+    <div class="nav-utils">
+      <button class="nav-search" aria-label="검색">🔍</button>
+      <a href="#contact" class="nav-lang">문의</a>
+    </div>
+    <button class="hamburger" onclick="document.getElementById('mm').classList.toggle('open')">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+<div id="mm" class="mobile-menu">
+  <button class="mobile-close" onclick="document.getElementById('mm').classList.remove('open')">&times;</button>
+  <a href="#expertise" onclick="document.getElementById('mm').classList.remove('open')">EXPERTISE</a>
+  <a href="#professionals" onclick="document.getElementById('mm').classList.remove('open')">PROFESSIONALS</a>
+  <a href="#insights" onclick="document.getElementById('mm').classList.remove('open')">INSIGHTS</a>
+  <a href="#about" onclick="document.getElementById('mm').classList.remove('open')">ABOUT</a>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-en">Business Consulting · Since 2009</div>
+    <h1>기업의 <em>복잡한 도전</em>을<br>전략적 기회로 전환합니다</h1>
+    <div class="hero-divider"></div>
+    <p>20여 년의 경험, 200개 이상의 프로젝트.<br>데이터와 통찰로 실질적인 변화를 이끕니다.</p>
+  </div>
+  <div class="hero-scroll" onclick="document.getElementById('expertise').scrollIntoView({behavior:'smooth'})">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</div>
+
+<!-- EXPERTISE BAR -->
+<div class="expertise-bar" id="expertise">
+  <div class="expertise-inner">
+    <a class="expertise-item" href="#"><div class="expertise-item-label">경영 전략</div></a>
+    <a class="expertise-item" href="#"><div class="expertise-item-label">조직 혁신</div></a>
+    <a class="expertise-item" href="#"><div class="expertise-item-label">M&amp;A 자문</div></a>
+    <a class="expertise-item" href="#"><div class="expertise-item-label">디지털 전환</div></a>
+    <a class="expertise-item" href="#"><div class="expertise-item-label">리스크 관리</div></a>
+    <a class="expertise-item" href="#"><div class="expertise-item-label">글로벌 진출</div></a>
+  </div>
+</div>
+
+<!-- INSIGHTS -->
+<div class="section" id="insights">
+  <div class="section-inner">
+    <div class="section-head">
+      <h2>INSIGHTS</h2>
+      <a href="#" class="view-more">View More →</a>
+    </div>
+    <div class="insights-grid">
+      <div class="insight-main">
+        <div class="insight-type">뉴스레터</div>
+        <h3>불확실한 시장에서의 성장 전략: 2026년 경영 환경 전망</h3>
+        <p class="insight-excerpt">글로벌 공급망 재편과 AI 기술 확산이 가속화되는 환경에서 한국 기업들이 취해야 할 전략적 포지셔닝과 실행 방향을 심층 분석합니다.</p>
+        <div class="insight-date">2026.01.15</div>
+      </div>
+      <div class="insight-side">
+        <div class="insight-side-item">
+          <div class="insight-type">뉴스레터</div>
+          <h4>AI 시대의 조직 혁신: 전통 기업의 대응법</h4>
+          <div class="insight-date">2025.12.10</div>
+        </div>
+        <div class="insight-side-item">
+          <div class="insight-type">뉴스레터</div>
+          <h4>2025년 하반기 M&amp;A 시장 동향과 전망</h4>
+          <div class="insight-date">2025.11.20</div>
+        </div>
+      </div>
+      <div class="insight-side">
+        <div class="insight-side-item">
+          <div class="insight-type">뉴스레터</div>
+          <h4>ESG 경영 내재화, 선택이 아닌 필수</h4>
+          <div class="insight-date">2025.11.05</div>
+        </div>
+        <div class="insight-side-item">
+          <div class="insight-type">뉴스레터</div>
+          <h4>글로벌 시장 진출 시 고려해야 할 리스크 요소</h4>
+          <div class="insight-date">2025.10.18</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ABOUT + AWARDS -->
+<div class="section section-gray" id="about">
+  <div class="section-inner">
+    <div class="section-head">
+      <h2>ABOUT</h2>
+    </div>
+    <div class="about-grid">
+      <div class="about-text">
+        <h2>신뢰와 전문성을<br>바탕으로 한 파트너십</h2>
+        <p>Apex &amp; Partners는 2009년 설립 이후 대기업, 중견기업, 스타트업에 이르기까지 다양한 규모와 산업의 기업들과 함께 복잡한 경영 과제를 해결해 왔습니다.</p>
+        <p>글로벌 네트워크와 로컬 인사이트를 결합하여 실행 가능한 전략을 제시합니다. 단순한 자문을 넘어 실질적인 변화와 성과를 함께 만들어갑니다.</p>
+        <a href="#contact" style="display:inline-block;margin-top:1rem;font-size:0.82rem;color:var(--navy);letter-spacing:0.06em;text-transform:uppercase;text-decoration:none;border-bottom:1px solid var(--navy);padding-bottom:2px">회사 소개 더 보기 →</a>
+      </div>
+      <div class="about-awards">
+        <div class="awards-title">수상 및 인증</div>
+        <div class="award-item">
+          <div class="award-year">2025</div>
+          <div>
+            <div class="award-name">Forbes Korea 선정 최우수 컨설팅 펌</div>
+            <div class="award-detail">경영전략 부문 1위</div>
+          </div>
+        </div>
+        <div class="award-item">
+          <div class="award-year">2024</div>
+          <div>
+            <div class="award-name">Asia Pacific Best Consulting Award</div>
+            <div class="award-detail">M&amp;A Advisory 부문</div>
+          </div>
+        </div>
+        <div class="award-item">
+          <div class="award-year">2023</div>
+          <div>
+            <div class="award-name">한국경영학회 올해의 기업 파트너</div>
+            <div class="award-detail">디지털 전환 우수사례</div>
+          </div>
+        </div>
+        <div class="award-item">
+          <div class="award-year">2022</div>
+          <div>
+            <div class="award-name">Great Place to Work 인증</div>
+            <div class="award-detail">컨설팅 업계 5년 연속</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PROFESSIONALS -->
+<div class="section" id="professionals">
+  <div class="section-inner">
+    <div class="section-head">
+      <h2>PROFESSIONALS</h2>
+      <a href="#" class="view-more">View More →</a>
+    </div>
+    <div class="professionals-grid">
+      <div class="professional-card">
+        <div class="professional-avatar">김</div>
+        <div class="professional-name">김성준 대표</div>
+        <div class="professional-role">Managing Partner</div>
+        <div class="professional-area">경영전략 · M&amp;A · 글로벌</div>
+      </div>
+      <div class="professional-card">
+        <div class="professional-avatar">이</div>
+        <div class="professional-name">이지현 파트너</div>
+        <div class="professional-role">Partner</div>
+        <div class="professional-area">조직혁신 · HR · 변화관리</div>
+      </div>
+      <div class="professional-card">
+        <div class="professional-avatar">박</div>
+        <div class="professional-name">박준호 파트너</div>
+        <div class="professional-role">Partner</div>
+        <div class="professional-area">디지털전환 · IT전략</div>
+      </div>
+      <div class="professional-card">
+        <div class="professional-avatar">최</div>
+        <div class="professional-name">최민서 디렉터</div>
+        <div class="professional-role">Director</div>
+        <div class="professional-area">재무전략 · 리스크관리</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer id="contact">
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h4>Expertise</h4>
+        <ul>
+          <li><a href="#">경영 전략</a></li>
+          <li><a href="#">조직 혁신</a></li>
+          <li><a href="#">M&amp;A 자문</a></li>
+          <li><a href="#">디지털 전환</a></li>
+          <li><a href="#">리스크 관리</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Professionals</h4>
+        <ul>
+          <li><a href="#">파트너</a></li>
+          <li><a href="#">디렉터</a></li>
+          <li><a href="#">시니어 컨설턴트</a></li>
+          <li><a href="#">전문 분야</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Insights</h4>
+        <ul>
+          <li><a href="#">뉴스레터</a></li>
+          <li><a href="#">리포트</a></li>
+          <li><a href="#">케이스 스터디</a></li>
+          <li><a href="#">미디어</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <ul>
+          <li><a href="#">상담 문의</a></li>
+          <li><a href="#">02-1234-5678</a></li>
+          <li><a href="#">contact@apex.co.kr</a></li>
+          <li><a href="#">채용</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-logo-area">
+        <a href="#" class="logo">Apex <span>&</span> Partners</a>
+        <div class="footer-address">사업자등록번호 123-45-67890 | 대표: 김성준<br>서울특별시 강남구 테헤란로 123, 15층 (역삼동)</div>
+      </div>
+      <div class="footer-legal">
+        <div class="footer-legal-links">
+          <a href="#">개인정보처리방침</a>
+          <a href="#">이용약관</a>
+          <a href="#">사이트맵</a>
+        </div>
+        <div class="footer-copy">© 2025 Apex &amp; Partners. All Rights Reserved.</div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

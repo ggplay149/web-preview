@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apex & Partners</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+    :root{
+      --bg:#fff;--bg2:#f8f9fb;--bg3:#f2f4f8;
+      --navy:#0d1b34;--blue:#3162f4;--blue2:#4f7af8;
+      --text:#111;--muted:#6b7280;--light:#adb5bd;--border:#e8eaed;
+    }
+    html{scroll-behavior:smooth}
+    body{font-family:'Pretendard',-apple-system,sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
+
+    /* NAV - 토스: 좌측 로고, 우측 텍스트 메뉴들, CTA 없음 */
+    nav{
+      position:sticky;top:0;z-index:100;
+      height:60px;display:flex;align-items:center;justify-content:space-between;
+      padding:0 2.5rem;
+      background:rgba(255,255,255,0.95);backdrop-filter:blur(20px);
+      border-bottom:1px solid var(--border);
+    }
+    .logo{font-size:1.1rem;font-weight:700;color:var(--navy);text-decoration:none;letter-spacing:-0.02em}
+    .logo em{color:var(--blue);font-style:normal}
+    .nav-right{display:flex;align-items:center;gap:0.25rem}
+    .nav-right a{
+      font-size:0.9rem;font-weight:500;color:var(--muted);
+      text-decoration:none;padding:0.5rem 0.85rem;border-radius:8px;
+      transition:background 0.15s,color 0.15s;
+    }
+    .nav-right a:hover{background:var(--bg3);color:var(--text)}
+    .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:4px}
+    .hamburger span{width:20px;height:1.5px;background:var(--text);display:block}
+    .mobile-menu{display:none;position:fixed;inset:0;z-index:200;background:#fff;flex-direction:column;align-items:center;justify-content:center;gap:2rem}
+    .mobile-menu.open{display:flex}
+    .mobile-menu a{font-size:1.4rem;font-weight:600;color:var(--text);text-decoration:none}
+    .mobile-close{position:absolute;top:1.5rem;right:1.5rem;background:none;border:none;font-size:1.8rem;cursor:pointer;color:var(--muted)}
+
+    /* HERO - 토스: 큰 텍스트, 앱 목업 이미지 대신 텍스트+수치 */
+    .hero{
+      padding:6rem 2.5rem 5rem;
+      max-width:1080px;margin:0 auto;
+    }
+    .hero-kicker{
+      display:inline-flex;align-items:center;gap:0.5rem;
+      font-size:0.82rem;font-weight:600;color:var(--blue);
+      background:#eef2ff;padding:0.35rem 0.85rem;border-radius:100px;
+      margin-bottom:2.2rem;
+    }
+    .hero h1{
+      font-size:clamp(2.8rem,5.5vw,4.2rem);
+      font-weight:700;line-height:1.15;letter-spacing:-0.035em;
+      color:var(--navy);margin-bottom:1.5rem;
+    }
+    .hero h1 .blue{color:var(--blue)}
+    .hero-desc{
+      font-size:1.1rem;line-height:1.85;color:var(--muted);
+      max-width:540px;margin-bottom:3rem;font-weight:400;
+    }
+    .hero-btn{
+      display:inline-flex;align-items:center;gap:0.5rem;
+      font-size:1rem;font-weight:600;color:var(--blue);
+      background:none;border:none;cursor:pointer;
+      font-family:inherit;padding:0;
+      transition:gap 0.2s;
+    }
+    .hero-btn:hover{gap:0.85rem}
+    .hero-btn::after{content:'→';font-size:1.1rem}
+
+    /* 토스식 큰 수치 하이라이트 바 */
+    .hero-numbers{
+      display:flex;gap:0;margin-top:4rem;
+      border:1px solid var(--border);border-radius:16px;overflow:hidden;
+    }
+    .hero-num-item{
+      flex:1;padding:2rem 1.5rem;
+      border-right:1px solid var(--border);
+      background:var(--bg2);
+    }
+    .hero-num-item:last-child{border-right:none}
+    .hero-num-val{font-size:2.2rem;font-weight:700;color:var(--navy);letter-spacing:-0.03em;line-height:1;margin-bottom:0.4rem}
+    .hero-num-label{font-size:0.82rem;color:var(--muted);font-weight:400}
+
+    /* FEATURE SECTIONS - 토스: 좌우 교차 레이아웃, 큰 설명 텍스트 */
+    .feature{
+      padding:6rem 2.5rem;
+      max-width:1080px;margin:0 auto;
+      display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:center;
+    }
+    .feature.reverse{direction:rtl}
+    .feature.reverse>*{direction:ltr}
+    .feature-bg{background:var(--bg2)}
+    .feature-bg .feature{max-width:none;padding:6rem 2.5rem}
+    .feature-label{
+      font-size:0.78rem;font-weight:600;color:var(--blue);
+      letter-spacing:0.05em;margin-bottom:1rem;
+    }
+    .feature h2{
+      font-size:clamp(1.8rem,3vw,2.5rem);font-weight:700;
+      letter-spacing:-0.03em;line-height:1.2;
+      color:var(--navy);margin-bottom:1.2rem;
+    }
+    .feature p{font-size:1rem;color:var(--muted);line-height:1.85;margin-bottom:2rem}
+    .feature-link{
+      font-size:0.92rem;font-weight:600;color:var(--blue);
+      display:inline-flex;align-items:center;gap:0.4rem;
+      text-decoration:none;transition:gap 0.2s;
+    }
+    .feature-link:hover{gap:0.7rem}
+    .feature-link::after{content:'→'}
+    .feature-visual{
+      background:linear-gradient(135deg,var(--navy) 0%,#1a3a6e 100%);
+      border-radius:20px;aspect-ratio:4/3;
+      display:flex;align-items:center;justify-content:center;
+      position:relative;overflow:hidden;
+    }
+    .feature-visual-num{
+      font-size:5rem;font-weight:700;color:rgba(255,255,255,0.05);
+      letter-spacing:-0.05em;
+    }
+    .feature-visual-badge{
+      position:absolute;bottom:1.5rem;left:1.5rem;
+      background:rgba(255,255,255,0.1);backdrop-filter:blur(8px);
+      border:1px solid rgba(255,255,255,0.15);border-radius:10px;
+      padding:0.7rem 1rem;color:#fff;font-size:0.82rem;font-weight:600;
+    }
+    .feature-visual-badge span{display:block;font-size:1.4rem;font-weight:700;letter-spacing:-0.02em;color:var(--blue2)}
+
+    /* SERVICE CHIPS - 토스: 태그/칩 스타일 카드들 */
+    .services-section{padding:5rem 2.5rem;background:var(--bg3)}
+    .services-inner{max-width:1080px;margin:0 auto}
+    .services-head{margin-bottom:3rem}
+    .services-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem}
+    .service-chip{
+      background:#fff;border-radius:16px;padding:1.8rem 1.5rem;
+      border:1px solid var(--border);transition:box-shadow 0.2s,transform 0.2s;
+      cursor:default;
+    }
+    .service-chip:hover{box-shadow:0 8px 24px rgba(0,0,0,0.07);transform:translateY(-2px)}
+    .chip-icon{
+      width:44px;height:44px;border-radius:12px;
+      background:#eef2ff;display:flex;align-items:center;justify-content:center;
+      font-size:1.2rem;margin-bottom:1.2rem;
+    }
+    .service-chip h3{font-size:1rem;font-weight:700;margin-bottom:0.5rem;color:var(--navy);letter-spacing:-0.01em}
+    .service-chip p{font-size:0.84rem;color:var(--muted);line-height:1.7}
+
+    /* TESTIMONIAL - 토스: 인용구 섹션 */
+    .testimonial{
+      padding:6rem 2.5rem;background:var(--navy);
+      text-align:center;
+    }
+    .testimonial blockquote{
+      font-size:clamp(1.3rem,2.5vw,2rem);font-weight:600;
+      color:#fff;line-height:1.5;letter-spacing:-0.02em;
+      max-width:720px;margin:0 auto 2rem;
+    }
+    .testimonial-author{font-size:0.88rem;color:rgba(255,255,255,0.4);font-weight:400}
+
+    /* CONTACT CTA - 토스: 중앙 CTA 블록 */
+    .cta-section{
+      padding:6rem 2.5rem;text-align:center;
+      background:var(--bg2);
+    }
+    .cta-section h2{
+      font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:700;
+      letter-spacing:-0.03em;color:var(--navy);margin-bottom:1rem;
+    }
+    .cta-section p{font-size:1rem;color:var(--muted);margin-bottom:2.5rem}
+    .cta-buttons{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+    .btn-fill{
+      padding:1rem 2.2rem;background:var(--blue);color:#fff;
+      font-size:0.95rem;font-weight:600;border-radius:12px;
+      border:none;cursor:pointer;font-family:inherit;
+      transition:background 0.15s;
+    }
+    .btn-fill:hover{background:var(--blue2)}
+    .btn-line{
+      padding:1rem 2.2rem;background:#fff;color:var(--navy);
+      font-size:0.95rem;font-weight:600;border-radius:12px;
+      border:1.5px solid var(--border);cursor:pointer;font-family:inherit;
+      transition:border-color 0.15s;
+    }
+    .btn-line:hover{border-color:var(--navy)}
+
+    /* FOOTER - 토스: 멀티컬럼 링크 + 회사정보 */
+    footer{
+      background:#fff;border-top:1px solid var(--border);
+      padding:3rem 2.5rem 2rem;
+    }
+    .footer-top{
+      display:grid;grid-template-columns:2fr 1fr 1fr 1fr;
+      gap:3rem;margin-bottom:3rem;
+      max-width:1080px;margin-left:auto;margin-right:auto;
+    }
+    .footer-brand .logo{display:block;margin-bottom:1rem}
+    .footer-brand p{font-size:0.82rem;color:var(--muted);line-height:1.7;max-width:240px}
+    .footer-col h4{font-size:0.78rem;font-weight:700;color:var(--navy);margin-bottom:1rem;letter-spacing:0.03em}
+    .footer-col ul{list-style:none;display:flex;flex-direction:column;gap:0.6rem}
+    .footer-col ul a{font-size:0.82rem;color:var(--muted);text-decoration:none;transition:color 0.15s}
+    .footer-col ul a:hover{color:var(--text)}
+    .footer-bottom{
+      max-width:1080px;margin:0 auto;
+      padding-top:2rem;border-top:1px solid var(--border);
+      display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem;
+    }
+    .footer-bottom p{font-size:0.78rem;color:var(--light)}
+    .footer-bottom-links{display:flex;gap:1.5rem}
+    .footer-bottom-links a{font-size:0.78rem;color:var(--muted);text-decoration:none}
+
+    @media(max-width:900px){
+      nav{padding:0 1.25rem}
+      .nav-right{display:none}
+      .hamburger{display:flex}
+      .hero{padding:4.5rem 1.25rem 3.5rem}
+      .hero-numbers{flex-direction:column}
+      .hero-num-item{border-right:none;border-bottom:1px solid var(--border)}
+      .hero-num-item:last-child{border-bottom:none}
+      .feature,.feature.reverse{grid-template-columns:1fr;gap:2.5rem;padding:3.5rem 1.25rem;direction:ltr}
+      .feature-bg .feature{padding:3.5rem 1.25rem}
+      .feature-visual{display:none}
+      .services-section{padding:3.5rem 1.25rem}
+      .testimonial{padding:4rem 1.25rem}
+      .cta-section{padding:4rem 1.25rem}
+      footer{padding:2.5rem 1.25rem 1.5rem}
+      .footer-top{grid-template-columns:1fr 1fr;gap:2rem}
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="#" class="logo">Apex<em>.</em>Partners</a>
+  <div class="nav-right">
+    <a href="#services">서비스</a>
+    <a href="#about">소개</a>
+    <a href="#insights">인사이트</a>
+    <a href="#contact">문의하기</a>
+  </div>
+  <button class="hamburger" onclick="document.getElementById('mm').classList.toggle('open')">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+<div id="mm" class="mobile-menu">
+  <button class="mobile-close" onclick="document.getElementById('mm').classList.remove('open')">&times;</button>
+  <a href="#services" onclick="document.getElementById('mm').classList.remove('open')">서비스</a>
+  <a href="#about" onclick="document.getElementById('mm').classList.remove('open')">소개</a>
+  <a href="#insights" onclick="document.getElementById('mm').classList.remove('open')">인사이트</a>
+  <a href="#contact" onclick="document.getElementById('mm').classList.remove('open')">문의하기</a>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-kicker">비즈니스 컨설팅</div>
+  <h1>지금 이 순간에도<br>기업은 <span class="blue">성장</span>해야<br>합니다</h1>
+  <p class="hero-desc">복잡한 경영 과제를 명확한 전략으로 풀어냅니다. 데이터 기반 인사이트로 실질적인 변화를 만드는 파트너가 되겠습니다.</p>
+  <button class="hero-btn" onclick="document.getElementById('services').scrollIntoView({behavior:'smooth'})">서비스 알아보기</button>
+  <div class="hero-numbers">
+    <div class="hero-num-item">
+      <div class="hero-num-val">200+</div>
+      <div class="hero-num-label">완료 프로젝트</div>
+    </div>
+    <div class="hero-num-item">
+      <div class="hero-num-val">15년</div>
+      <div class="hero-num-label">업계 경험</div>
+    </div>
+    <div class="hero-num-item">
+      <div class="hero-num-val">98%</div>
+      <div class="hero-num-label">고객 만족도</div>
+    </div>
+    <div class="hero-num-item">
+      <div class="hero-num-val">40+</div>
+      <div class="hero-num-label">서비스 산업군</div>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURE 1 -->
+<div class="feature-bg" id="about">
+  <div class="feature">
+    <div>
+      <div class="feature-label">경영 전략</div>
+      <h2>불확실성 속에서도<br>방향은 있습니다</h2>
+      <p>시장 분석과 경쟁 환경 평가를 기반으로 실행 가능한 성장 전략을 수립합니다. 단기 성과와 장기 비전을 동시에 설계합니다.</p>
+      <a href="#contact" class="feature-link">전략 상담 문의</a>
+    </div>
+    <div class="feature-visual">
+      <div class="feature-visual-num">01</div>
+      <div class="feature-visual-badge">
+        <span>200+</span>전략 프로젝트 완료
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURE 2 -->
+<div>
+  <div class="feature reverse">
+    <div>
+      <div class="feature-label">조직 혁신</div>
+      <h2>사람이 바뀌면<br>조직이 바뀝니다</h2>
+      <p>운영 구조 최적화, 프로세스 재설계, 조직 문화 혁신까지. 지속 가능한 변화를 위한 체계적인 접근을 제공합니다.</p>
+      <a href="#contact" class="feature-link">혁신 상담 문의</a>
+    </div>
+    <div class="feature-visual">
+      <div class="feature-visual-num">02</div>
+      <div class="feature-visual-badge">
+        <span>98%</span>고객 만족도
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURE 3 -->
+<div class="feature-bg">
+  <div class="feature">
+    <div>
+      <div class="feature-label">디지털 전환</div>
+      <h2>기술은 수단,<br>목표는 성과입니다</h2>
+      <p>AI·자동화·데이터 인프라 구축까지 기술 도입의 전 과정을 함께합니다. 기술과 비즈니스를 연결하는 실용적 전략을 제시합니다.</p>
+      <a href="#contact" class="feature-link">디지털 전환 문의</a>
+    </div>
+    <div class="feature-visual">
+      <div class="feature-visual-num">03</div>
+      <div class="feature-visual-badge">
+        <span>40+</span>산업군 경험
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<div class="services-section" id="services">
+  <div class="services-inner">
+    <div class="services-head">
+      <div class="feature-label">전체 서비스</div>
+      <h2 style="font-size:clamp(1.6rem,3vw,2.2rem);font-weight:700;letter-spacing:-0.03em;color:var(--navy)">모든 경영 과제에 답합니다</h2>
+    </div>
+    <div class="services-grid">
+      <div class="service-chip">
+        <div class="chip-icon">📈</div>
+        <h3>경영 전략</h3>
+        <p>성장 로드맵과 시장 진입 전략 수립</p>
+      </div>
+      <div class="service-chip">
+        <div class="chip-icon">🏗️</div>
+        <h3>조직 혁신</h3>
+        <p>구조 최적화와 조직 문화 변화 관리</p>
+      </div>
+      <div class="service-chip">
+        <div class="chip-icon">🤝</div>
+        <h3>M&amp;A 자문</h3>
+        <p>인수합병 실사부터 통합 전략까지</p>
+      </div>
+      <div class="service-chip">
+        <div class="chip-icon">⚡</div>
+        <h3>디지털 전환</h3>
+        <p>기술 도입과 비즈니스 혁신 연계</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TESTIMONIAL -->
+<div class="testimonial">
+  <blockquote>"복잡하게 얽힌 문제를 명쾌하게 풀어주는 파트너입니다. 3년 연속 함께하고 있습니다."</blockquote>
+  <div class="testimonial-author">— 대기업 계열사 CFO</div>
+</div>
+
+<!-- CTA -->
+<div class="cta-section" id="contact">
+  <h2>지금 바로 시작하세요</h2>
+  <p>비즈니스 과제를 알려주시면 48시간 내에 답변드립니다.</p>
+  <div class="cta-buttons">
+    <button class="btn-fill">무료 상담 신청</button>
+    <button class="btn-line">서비스 소개서 받기</button>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div class="footer-brand">
+      <a href="#" class="logo">Apex<em style="color:var(--blue);font-style:normal">.</em>Partners</a>
+      <p>기업의 성장 전략부터 조직 혁신까지, 실질적인 변화를 만드는 비즈니스 컨설팅 파트너입니다.</p>
+    </div>
+    <div class="footer-col">
+      <h4>서비스</h4>
+      <ul>
+        <li><a href="#">경영 전략</a></li>
+        <li><a href="#">조직 혁신</a></li>
+        <li><a href="#">M&amp;A 자문</a></li>
+        <li><a href="#">디지털 전환</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>회사</h4>
+      <ul>
+        <li><a href="#">회사 소개</a></li>
+        <li><a href="#">인사이트</a></li>
+        <li><a href="#">채용</a></li>
+        <li><a href="#">뉴스</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h4>문의</h4>
+      <ul>
+        <li><a href="#">상담 신청</a></li>
+        <li><a href="#">02-1234-5678</a></li>
+        <li><a href="#">contact@apex.co.kr</a></li>
+        <li><a href="#">오시는 길</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2025 Apex &amp; Partners. 사업자등록번호 123-45-67890 | 서울특별시 강남구 테헤란로 123</p>
+    <div class="footer-bottom-links">
+      <a href="#">개인정보처리방침</a>
+      <a href="#">이용약관</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
